@@ -81,6 +81,15 @@ namespace LurkerCommand.GameSystem {
             unit.gridPosition = cell.gridPosition;
             MoveTo(unit, cell);
         }
+        public static void LHandleDrag(Unit unit) {
+            if (!CanMove(unit) || !CanControl(unit)) return;
+            unit.valueText.Color *= draggingColorMultiplier;
+            Field.ToggleMoveNotes(unit.currentCell, true, unit.Value);
+        }
+        public static void RHandleDrag(Unit unit) {
+            if (!CanControl(unit) || unit.Value < 2) return;
+            unit.unitClone = HandleInteraction(unit);
+        }
         public static Unit HandleInteraction(Unit unit) {
             Unit unitClone = PoolManager.Get<Unit>();
             unitClone.Setup(unit.valueText.Font, unit.gridPosition, unit.Value / 2);
@@ -89,7 +98,41 @@ namespace LurkerCommand.GameSystem {
 
             return unitClone;
         }
-        public static void HandleDrop(Unit unit) {
+        public static void LHandleDrop(Unit unit) {
+            unit.valueText.Color = unit.team.TeamColor;
+            Field.ToggleMoveNotes(unit.currentCell, false, unit.Value);
+            var available = Field.GetAvailableCells(unit.currentCell, unit.Value);
+            Cell target = Field.GetCellByWorldPos(unit.Transform.LocalPosition);
+            if (target != null && target != unit.currentCell)
+            {
+                int dist = GetDistance(unit.currentCell, target);
+                if (dist <= unit.Value)
+                {
+                    if (!target.IsEmpty)
+                    {
+                        if (target.currentUnit.team == unit.team && dist == 1)
+                        {
+                            if (MergeUnit(target.currentUnit, unit)) return;
+                        }
+                        else if (target.currentUnit.team != unit.team && dist <= unit.Value)
+                        {
+                            AttackUnit(unit, target.currentUnit);
+                            return;
+                        }
+                        MoveTo(unit, unit.currentCell);
+                        return;
+                    }
+                    if (available.Contains(target))
+                    {
+                        MoveUnit(unit, target, (sbyte)dist);
+                        return;
+                    }
+                }
+            }
+            MoveTo(unit, unit.currentCell);
+        }
+        public static void RHandleDrop(Unit unit) {
+            if (unit.unitClone == null) return;
             Field.ToggleMoveNotes(unit.currentCell, false, splitMergeRange);
             Cell targetCell = Field.GetCellByWorldPos(unit.unitClone.Transform.LocalPosition);
             if (targetCell != null && targetCell != unit.currentCell) {

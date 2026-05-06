@@ -25,15 +25,10 @@ namespace GameEngine.Systems
         private bool _needsSort;
         private bool _needsUISort;
 
-        private IDraggable _currentDraggedLBM;
-        private Entity _draggedEntityLBM;
-        private Vector2 _dragOffsetLBM;
-        private bool _isDraggingUI_LBM;
-
-        private IDraggable _currentDraggedRBM;
-        private Entity _draggedEntityRBM;
-        private Vector2 _dragOffsetRBM;
-        private bool _isDraggingUI_RBM;
+        private IDraggable _currentDragged;
+        private Entity _draggedEntity;
+        private Vector2 _dragOffset;
+        private bool _isDraggingUI;
 
         public void Add(GameObject obj) => _toAdd.Add(obj);
         public void AddUI(GameObject obj) => _uiToAdd.Add(obj);
@@ -48,68 +43,51 @@ namespace GameEngine.Systems
             for (int i = 0; i < updateSpan.Length; i++)
                 updateSpan[i].Update(gameTime);
         }
+        private MouseButton _activeDragButton;
 
         private void HandleInput()
         {
             if (camera == null) return;
 
             Vector2 mouseScreen = InputManager.MousePosition;
-            Vector2 mouseWorld = camera.ScreenToWorld(InputManager.MousePosition);
+            Vector2 mouseWorld = camera.ScreenToWorld(mouseScreen);
 
-            if (InputManager.IsMouseButtonPressed(MouseButton.Left))
+            if (_draggedEntity == null)
             {
-                if (!ProcessInputGroup(_uiInputTargets, mouseScreen, out _currentDraggedLBM, out _draggedEntityLBM, true))
-                {
-                    ProcessInputGroup(_inputTargets, mouseWorld, out _currentDraggedLBM, out _draggedEntityLBM, false);
-                }
-
-                if (_currentDraggedLBM != null && _draggedEntityLBM != null)
-                {
-                    Vector2 origin = _isDraggingUI_LBM ? mouseScreen : mouseWorld;
-                    _dragOffsetLBM = _draggedEntityLBM.Transform.LocalPosition - origin;
-                    _currentDraggedLBM.OnDragStartLBM();
-                }
+                if (InputManager.IsMouseButtonPressed(MouseButton.Left))
+                    TryStartDrag(MouseButton.Left, mouseScreen, mouseWorld);
+                else if (InputManager.IsMouseButtonPressed(MouseButton.Right))
+                    TryStartDrag(MouseButton.Right, mouseScreen, mouseWorld);
             }
-            else if (_draggedEntityLBM != null && InputManager.IsMouseButtonDown(MouseButton.Left))
+            else if (InputManager.IsMouseButtonDown(_activeDragButton))
             {
-                Vector2 currentPos = _isDraggingUI_LBM ? mouseScreen : mouseWorld;
-                _currentDraggedLBM.OnDragUpdateLBM(currentPos + _dragOffsetLBM);
+                Vector2 currentPos = _isDraggingUI ? mouseScreen : mouseWorld;
+                _currentDragged.OnDragUpdate(_activeDragButton, currentPos + _dragOffset);
             }
-            else if (_draggedEntityLBM != null)
+            else
             {
-                _currentDraggedLBM.OnDragEndLBM();
-                _draggedEntityLBM = null;
-                _currentDraggedLBM = null;
-            }
-
-            if (InputManager.IsMouseButtonPressed(MouseButton.Right))
-            {
-                if (!ProcessInputGroup(_uiInputTargets, mouseScreen, out _currentDraggedRBM, out _draggedEntityRBM, true, true))
-                {
-                    ProcessInputGroup(_inputTargets, mouseWorld, out _currentDraggedRBM, out _draggedEntityRBM, false, true);
-                }
-
-                if (_currentDraggedRBM != null && _draggedEntityRBM != null)
-                {
-                    Vector2 origin = _isDraggingUI_RBM ? mouseScreen : mouseWorld;
-                    _dragOffsetRBM = _draggedEntityRBM.Transform.LocalPosition - origin;
-                    _currentDraggedRBM.OnDragStartRBM();
-                }
-            }
-            else if (_draggedEntityRBM != null && InputManager.IsMouseButtonDown(MouseButton.Right))
-            {
-                Vector2 currentPos = _isDraggingUI_RBM ? mouseScreen : mouseWorld;
-                _currentDraggedRBM.OnDragUpdateRBM(currentPos + _dragOffsetRBM);
-            }
-            else if (_draggedEntityRBM != null)
-            {
-                _currentDraggedRBM.OnDragEndRBM();
-                _draggedEntityRBM = null;
-                _currentDraggedRBM = null;
+                _currentDragged.OnDragEnd(_activeDragButton);
+                _draggedEntity = null;
+                _currentDragged = null;
             }
         }
 
-        private bool ProcessInputGroup(List<IRect> targets, Vector2 mousePos, out IDraggable drag, out Entity entity, bool isUI, bool isRBM = false)
+        private void TryStartDrag(MouseButton button, Vector2 screenPos, Vector2 worldPos)
+        {
+            if (!ProcessInputGroup(_uiInputTargets, screenPos, out _currentDragged, out _draggedEntity, true))
+            {
+                ProcessInputGroup(_inputTargets, worldPos, out _currentDragged, out _draggedEntity, false);
+            }
+
+            if (_currentDragged != null)
+            {
+                _activeDragButton = button;
+                Vector2 origin = _isDraggingUI ? screenPos : worldPos;
+                _dragOffset = _draggedEntity.Transform.LocalPosition - origin;
+                _currentDragged.OnDragStart(button);
+            }
+        }
+        private bool ProcessInputGroup(List<IRect> targets, Vector2 mousePos, out IDraggable drag, out Entity entity, bool isUI)
         {
             drag = null;
             entity = null;
@@ -123,7 +101,7 @@ namespace GameEngine.Systems
                     {
                         drag = d;
                         entity = span[i] as Entity;
-                        if (isRBM) _isDraggingUI_RBM = isUI; else _isDraggingUI_LBM = isUI;
+                        _isDraggingUI = isUI;
                     }
                     return true;
                 }

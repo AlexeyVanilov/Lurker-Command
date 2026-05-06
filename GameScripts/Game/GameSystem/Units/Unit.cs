@@ -5,7 +5,6 @@ using LurkerCommand.MapSystem;
 using LurkerCommand.Services;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace LurkerCommand.GameSystem
 {
@@ -72,60 +71,30 @@ namespace LurkerCommand.GameSystem
             if (bindedCell != null) UnitSystem.ForceBind(this, bindedCell);
             IsActive = true;
         }
-        public void OnDragStartLBM()
-        {
-            if (!UnitSystem.CanMove(this) || !UnitSystem.CanControl(this)) return;
-            valueText.Color *= UnitSystem.draggingColorMultiplier;
-            Field.ToggleMoveNotes(currentCell, true, Value);
-        }
-        public void OnDragUpdateLBM(Vector2 position)
-        {
-            if (UnitSystem.CanControl(this)) Transform.LocalPosition = position;
-        }
-        public void OnDragEndLBM()
-        {
-            valueText.Color = team.TeamColor;
-            Field.ToggleMoveNotes(currentCell, false, Value);
-            var available = Field.GetAvailableCells(currentCell, Value);
-            Cell target = Field.GetCellByWorldPos(Transform.LocalPosition);
-            if (target != null && target != currentCell)
-            {
-                int dist = UnitSystem.GetDistance(currentCell, target);
-                if (dist <= Value)
-                {
-                    if (!target.IsEmpty)
-                    {
-                        if (target.currentUnit.team == team && dist == 1)
-                        {
-                            if (UnitSystem.MergeUnit(target.currentUnit, this)) return;
-                        }
-                        else if (target.currentUnit.team != team && dist <= Value)
-                        {
-                            UnitSystem.AttackUnit(this, target.currentUnit);
-                            return;
-                        }
-                        UnitSystem.MoveTo(this, currentCell);
-                        return;
-                    }
-                    if (available.Contains(target)) {
-                        UnitSystem.MoveUnit(this, target, (sbyte)dist);
-                        return;
-                    }
-                }
+        public void OnDragStart(MouseButton mouse) {
+            if(mouse == MouseButton.Left) {
+                UnitSystem.LHandleDrag(this);
             }
-            UnitSystem.MoveTo(this, currentCell);
+            else {
+                UnitSystem.RHandleDrag(this);
+            }
         }
-
-        public void OnDragStartRBM()
-        {
-            if (!UnitSystem.CanControl(this) || Value < 2) return;
-            unitClone = UnitSystem.HandleInteraction(this);
+        public void OnDragUpdate(MouseButton mouse, Vector2 position) {
+            if(mouse == MouseButton.Left) {
+                if (UnitSystem.CanControl(this)) Transform.LocalPosition = position;
+            }
+            else {
+                if (unitClone != null) unitClone.Transform.LocalPosition = position;
+            }
         }
-
-        public void OnDragUpdateRBM(Vector2 position) { 
-            if(unitClone != null) unitClone.Transform.LocalPosition = position;
+        public void OnDragEnd(MouseButton mouse) {
+            if(mouse == MouseButton.Left) {
+                UnitSystem.LHandleDrop(this);
+            }
+            else {
+                UnitSystem.RHandleDrop(this);
+            }
         }
-        public void OnDragEndRBM() => UnitSystem.HandleDrop(this);
         public void OnSpawn() => IsActive = true;
         public void OnDespawn() {
             team?.RemoveUnit(this); 
