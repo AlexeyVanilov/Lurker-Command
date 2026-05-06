@@ -42,7 +42,7 @@
 
   <ItemGroup>
     <Folder Include="Content\Fonts\" />
-    <Folder Include="GameScripts\Game\NetworkSystem\" />
+    <Folder Include="Game\NetworkSystem\" />
   </ItemGroup>
 
   <Target Name="RestoreDotnetTools" BeforeTargets="CollectPackageReferences">
