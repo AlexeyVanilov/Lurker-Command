@@ -1,9 +1,68 @@
-﻿using System.Linq;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace GameEngine.Utils {
-    public static class StringCache {
-        private static readonly string[] _numbers = Enumerable.Range(0, 256).Select(i => i.ToString()).ToArray();
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public static string Get(int value) => (uint)value < (uint)_numbers.Length ? _numbers[value] : value.ToString();
+    public static class IntToStringCache
+    {
+        [ThreadStatic]
+        private static int _lastValue;
+
+        [ThreadStatic]
+        private static string? _lastString;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetString(int value)
+        {
+            var currentCachedString = _lastString;
+
+            if (currentCachedString != null && value == _lastValue)
+            {
+                return currentCachedString;
+            }
+
+            string newValue = value.ToString();
+            _lastValue = value;
+            _lastString = newValue;
+
+            return newValue;
+        }
+
+        public static void Clear()
+        {
+            _lastString = null;
+            _lastValue = 0;
+        }
+    }
+
+    public static class FloatToStringCache
+    {
+        [ThreadStatic]
+        private static float _lastValue;
+
+        [ThreadStatic]
+        private static string? _lastString;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GetString(float value)
+        {
+            var currentCachedString = _lastString;
+
+            if (currentCachedString != null && value == _lastValue)
+            {
+                return currentCachedString;
+            }
+
+            string newValue = value.ToString();
+            _lastValue = value;
+            _lastString = newValue;
+
+            return newValue;
+        }
+
+        public static void Clear()
+        {
+            _lastString = null;
+            _lastValue = 0;
+        }
     }
 }

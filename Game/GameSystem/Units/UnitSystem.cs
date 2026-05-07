@@ -144,7 +144,7 @@ namespace LurkerCommand.GameSystem {
             }
             Kill(unit.unitClone);
         }
-        public static void UpdateText(Unit unit) => unit.valueText.text = StringCache.Get(unit.Value);
+        public static void UpdateText(Unit unit) => unit.valueText.text = IntToStringCache.GetString(unit.Value);
         public static bool MergeUnit(Unit baseUnit, Unit refUnit)
         {
             Team team = baseUnit.team;
