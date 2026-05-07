@@ -1,4 +1,5 @@
 ﻿using GameEngine.Core;
+using GameEngine.Core.InputSystem;
 using GameEngine.Models;
 using GameEngine.Specs;
 using LurkerCommand.MapSystem;

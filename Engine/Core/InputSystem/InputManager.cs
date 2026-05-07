@@ -1,12 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
-namespace GameEngine.Core
+namespace GameEngine.Core.InputSystem
 {
-    public static class InputManager
-    {
-        private static KeyboardState _currentKeyEntry;
-        private static KeyboardState _prevKeyEntry;
+    public static class InputManager {
+        public const int startMaxKeys = 4;
+        private static List<KeyStruct> _keyStructs = new List<KeyStruct>(startMaxKeys);
+
         private static MouseState _currentMouseEntry;
         private static MouseState _prevMouseEntry;
 
@@ -14,19 +17,45 @@ namespace GameEngine.Core
         public static Vector2 MousePosition => new Vector2(_currentMouseEntry.X, _currentMouseEntry.Y);
         public static Vector2 MouseDelta => new Vector2(_currentMouseEntry.X - _prevMouseEntry.X, _currentMouseEntry.Y - _prevMouseEntry.Y);
 
+        private static KeyboardState _currentKeyState;
+        private static KeyboardState _prevKeyState;
+
         public static void Update()
         {
-            _prevKeyEntry = _currentKeyEntry;
             _prevMouseEntry = _currentMouseEntry;
-
-            _currentKeyEntry = Keyboard.GetState();
             _currentMouseEntry = Mouse.GetState();
+
+            _prevKeyState = _currentKeyState;
+            _currentKeyState = Keyboard.GetState();
+
+            Span<KeyStruct> keySpan = CollectionsMarshal.AsSpan(_keyStructs);
+            for (int i = 0; i < keySpan.Length; i++)
+            {
+                var key = keySpan[i].Key;
+                if (key == Keys.None) continue;
+
+                bool isDown = _currentKeyState.IsKeyDown(key);
+                bool wasDown = _prevKeyState.IsKeyDown(key);
+
+                bool shouldInvoke = keySpan[i].KeyType switch
+                {
+                    KeyType.Pressed => isDown && !wasDown,
+                    KeyType.Released => !isDown && wasDown,
+                    KeyType.Held => isDown,
+                    _ => false
+                };
+
+                if (shouldInvoke) keySpan[i].KeyAction?.Invoke();
+            }
         }
 
-        public static bool IsKeyDown(Keys key) => _currentKeyEntry.IsKeyDown(key);
+        public static bool IsKeyDown(Keys key) => _currentKeyState.IsKeyDown(key);
 
-        public static bool IsKeyPressed(Keys key) => _currentKeyEntry.IsKeyDown(key) && _prevKeyEntry.IsKeyUp(key);
-
+        public static void Add(Keys key, KeyType keyType, Action keyAction) {
+            KeyStruct keyStruct = new KeyStruct(key, keyType, keyAction);
+            _keyStructs.Add(keyStruct);
+        }
+        public static void Add(KeyStruct keyStruct) => _keyStructs.Add(keyStruct);
         public static bool IsMouseButtonDown(MouseButton button) => button switch
         {
             MouseButton.Left => _currentMouseEntry.LeftButton == ButtonState.Pressed,

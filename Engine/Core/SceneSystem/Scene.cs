@@ -1,4 +1,5 @@
-﻿using GameEngine.Models;
+﻿using GameEngine.Core.InputSystem;
+using GameEngine.Models;
 using GameEngine.Specs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

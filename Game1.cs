@@ -1,4 +1,6 @@
 ﻿using GameEngine.Core;
+using GameEngine.Core.InputSystem;
+using GameEngine.Core.SceneSystem;
 using LurkerCommand.Scenes;
 using LurkerCommand.Services;
 using Microsoft.Xna.Framework;
@@ -34,8 +36,14 @@ namespace LurkerCommand
             Window.AllowUserResizing = ConfigManager.Get<bool>("AllowResizing");
             Window.Title = ConfigManager.Get<string>("WindowTitle");
             _fullScreenKey = ConfigManager.Get<Keys>("FullScreenKey");
+
+            InputManager.Add(_fullScreenKey, KeyType.Pressed, SetFullScreen);
         }
 
+        private void SetFullScreen() {
+            _graphics.ToggleFullScreen();
+            ConfigManager.Save();
+        }
         protected override void Initialize()
         {
             AssetManager.Init(Content);
@@ -54,12 +62,6 @@ namespace LurkerCommand
         protected override void Update(GameTime gameTime)
         {
             InputManager.Update();
-
-            if (InputManager.IsKeyPressed(_fullScreenKey))
-            {
-                _graphics.ToggleFullScreen();
-                ConfigManager.Save();
-            }
 
             SceneManager.Update(gameTime);
             base.Update(gameTime);

@@ -1,4 +1,4 @@
-﻿using GameEngine.Core;
+﻿using GameEngine.Core.InputSystem;
 using Microsoft.Xna.Framework;
 
 namespace GameEngine.Specs {

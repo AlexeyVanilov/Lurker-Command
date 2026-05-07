@@ -1,4 +1,5 @@
 ﻿using GameEngine.Core;
+using GameEngine.Core.InputSystem;
 using GameEngine.Models;
 using LurkerCommand.MapSystem;
 using Microsoft.Xna.Framework;
@@ -9,6 +10,7 @@ public sealed class CameraMovement : Entity
 {
     public Camera2D camera;
     private const float Speed = 15f;
+    private Vector2 _inputDirection;
     private const float ZoomFactor = 0.1f;
     private const float EdgeThreshold = 10f;
 
@@ -17,42 +19,39 @@ public sealed class CameraMovement : Entity
     {
         this.camera = camera;
         MoveCamera(startPosition);
-    }
 
+        Bind(Keys.W, Keys.Up, new Vector2(0, -1));
+        Bind(Keys.S, Keys.Down, new Vector2(0, 1));
+        Bind(Keys.A, Keys.Left, new Vector2(-1, 0));
+        Bind(Keys.D, Keys.Right, new Vector2(1, 0));
+    }
+    private void Bind(Keys k1, Keys k2, Vector2 direction) {
+        InputManager.Add(k1, KeyType.Held, () => _inputDirection += direction);
+        InputManager.Add(k2, KeyType.Held, () => _inputDirection += direction);
+    }
     public override void Update(GameTime gameTime)
     {
-        Vector2 movement = Vector2.Zero;
+        Vector2 finalMovement = Vector2.Zero;
 
         if (InputManager.IsMouseButtonDown(MouseButton.Middle))
         {
-            movement = -InputManager.MouseDelta / camera.Zoom;
+            finalMovement = -InputManager.MouseDelta / camera.Zoom;
         }
         else
         {
-            movement = GetKeyboardDirection() + GetEdgeDirection();
-            if (movement != Vector2.Zero)
+            if (_inputDirection != Vector2.Zero)
             {
-                movement.Normalize();
-                movement *= Speed;
+                finalMovement = Vector2.Normalize(_inputDirection) * Speed;
             }
+
+            finalMovement += GetEdgeDirection() * Speed;
         }
+
+        if (finalMovement != Vector2.Zero) MoveCamera(camera.Position + finalMovement);
 
         HandleZoom();
 
-        if (movement != Vector2.Zero)
-        {
-            MoveCamera(camera.Position + movement);
-        }
-    }
-
-    private Vector2 GetKeyboardDirection()
-    {
-        Vector2 dir = Vector2.Zero;
-        if (InputManager.IsKeyDown(Keys.W) || InputManager.IsKeyDown(Keys.Up)) dir.Y -= 1;
-        if (InputManager.IsKeyDown(Keys.S) || InputManager.IsKeyDown(Keys.Down)) dir.Y += 1;
-        if (InputManager.IsKeyDown(Keys.A) || InputManager.IsKeyDown(Keys.Left)) dir.X -= 1;
-        if (InputManager.IsKeyDown(Keys.D) || InputManager.IsKeyDown(Keys.Right)) dir.X += 1;
-        return dir;
+        _inputDirection = Vector2.Zero;
     }
 
     private Vector2 GetEdgeDirection()
