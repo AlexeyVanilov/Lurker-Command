@@ -3,7 +3,7 @@ using LurkerCommand.GameSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace LurkerCommand.MapSystem;
+namespace LurkerCommand.MapSystem.Cells;
 
 public sealed class ImmortalCell : Cell {
     public override byte idleBonus => 0;

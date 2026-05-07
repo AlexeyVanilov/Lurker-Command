@@ -2,6 +2,7 @@
 using GameEngine.Core.SceneSystem;
 using LurkerCommand.GameScripts.Game.MapSystem.Cells;
 using LurkerCommand.GameSystem;
+using LurkerCommand.MapSystem.Cells;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

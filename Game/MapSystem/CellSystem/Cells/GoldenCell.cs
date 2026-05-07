@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace LurkerCommand.MapSystem
+namespace LurkerCommand.MapSystem.Cells
 {
     public sealed class GoldenCell : Cell
     {
