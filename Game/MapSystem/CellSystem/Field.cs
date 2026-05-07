@@ -1,4 +1,5 @@
 ﻿using GameEngine.Core;
+using GameEngine.Core.SceneSystem;
 using LurkerCommand.GameScripts.Game.MapSystem.Cells;
 using LurkerCommand.GameSystem;
 using Microsoft.Xna.Framework;
