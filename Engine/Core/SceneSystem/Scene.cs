@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace GameEngine.Core
+namespace GameEngine.Core.SceneSystem
 {
     public abstract class Scene : IDisposable
     {

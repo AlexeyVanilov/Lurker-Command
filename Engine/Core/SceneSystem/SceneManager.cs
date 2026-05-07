@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace GameEngine.Core {
+namespace GameEngine.Core.SceneSystem {
     public static class SceneManager
     {
         private static readonly List<Scene> _scenes = new List<Scene>();
