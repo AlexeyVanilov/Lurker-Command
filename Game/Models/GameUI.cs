@@ -1,10 +1,11 @@
 ﻿using GameEngine.Core;
 using GameEngine.Models;
+using LurkerCommand.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace LurkerCommand.GameSystem {
+namespace LurkerCommand.Models {
     public static class GameUI {
         public static event Action<GameObject> onUIAdd;
         private static Text _timeText;

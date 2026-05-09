@@ -1,11 +1,11 @@
 ﻿using GameEngine.Core;
 using GameEngine.Core.SceneSystem;
 using GameEngine.Utils;
-using LurkerCommand.MapSystem;
+using LurkerCommand.Models;
 using System;
 using System.Runtime.CompilerServices;
 
-namespace LurkerCommand.GameSystem {
+namespace LurkerCommand.Core {
     public static class UnitSystem {
         public const byte splitMergeRange = 1;
         public const float draggingColorMultiplier = 0.6f;

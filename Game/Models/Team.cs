@@ -1,11 +1,10 @@
-﻿using LurkerCommand.MapSystem;
+﻿using LurkerCommand.Core;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace LurkerCommand.GameSystem
-{
+namespace LurkerCommand.Models {
     public sealed class Team
     {
         private readonly List<Unit> _units = new(32);

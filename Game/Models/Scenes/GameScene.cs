@@ -1,12 +1,11 @@
 ﻿using GameEngine.Core;
 using GameEngine.Core.InputSystem;
 using GameEngine.Core.SceneSystem;
-using LurkerCommand.GameSystem;
-using LurkerCommand.MapSystem;
+using LurkerCommand.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace LurkerCommand.Scenes
+namespace LurkerCommand.Models.Scenes
 {
     public sealed class GameScene : Scene
     {

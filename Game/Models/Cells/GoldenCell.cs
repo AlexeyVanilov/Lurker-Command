@@ -1,8 +1,7 @@
-﻿using LurkerCommand.GameScripts.Game.MapSystem.Cells;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace LurkerCommand.MapSystem.Cells
+namespace LurkerCommand.Models.Cells
 {
     public sealed class GoldenCell : Cell
     {

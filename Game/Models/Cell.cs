@@ -1,12 +1,10 @@
 ﻿using GameEngine.Core;
 using GameEngine.Models;
-using LurkerCommand.GameScripts.Game.MapSystem.Cells;
-using LurkerCommand.GameSystem;
-using LurkerCommand.Services;
+using LurkerCommand.Specs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace LurkerCommand.MapSystem
+namespace LurkerCommand.Models
 {
     public class Cell : Entity, IGrid
     {

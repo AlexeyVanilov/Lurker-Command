@@ -1,5 +1,4 @@
-﻿namespace LurkerCommand.GameScripts.Game.MapSystem.Cells
-{
+﻿namespace LurkerCommand.Models {
     public enum CellType {
         DefaultCell,
         GoldenCell,

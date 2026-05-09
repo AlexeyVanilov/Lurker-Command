@@ -1,16 +1,14 @@
 ﻿using GameEngine.Core;
 using GameEngine.Core.SceneSystem;
-using LurkerCommand.GameScripts.Game.MapSystem.Cells;
-using LurkerCommand.GameSystem;
-using LurkerCommand.MapSystem.Cells;
+using LurkerCommand.Models;
+using LurkerCommand.Models.Cells;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace LurkerCommand.MapSystem
-{
+namespace LurkerCommand.Core {
     public static class Field
     {
         private const int SizeX = 32;

@@ -1,9 +1,8 @@
-﻿using LurkerCommand.GameSystem.AI;
+﻿using LurkerCommand.Models;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace LurkerCommand.GameSystem
-{
+namespace LurkerCommand.Core {
     public static class TeamManager
     {
         public const float TimeMultiplier = 1.2f;

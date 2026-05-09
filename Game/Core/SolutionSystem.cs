@@ -1,9 +1,7 @@
-﻿using LurkerCommand.MapSystem;
-using System;
+﻿using LurkerCommand.Models;
 using System.Collections.Generic;
 
-namespace LurkerCommand.GameSystem.AI
-{
+namespace LurkerCommand.Core {
     public sealed class SolutionSystem
     {
         private readonly SolutionData _data = new SolutionData();

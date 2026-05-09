@@ -1,7 +1,6 @@
 ﻿using System;
 
-namespace LurkerCommand.GameSystem.AI
-{
+namespace LurkerCommand.Models {
     public sealed class SolutionData
     {
         private readonly Random _rand = new Random();

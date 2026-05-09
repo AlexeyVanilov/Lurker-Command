@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LurkerCommand.Models;
+using Microsoft.Xna.Framework;
 
-namespace LurkerCommand.GameSystem.AI
-{
+namespace LurkerCommand.Core {
     public sealed class Bot
     {
         private readonly Team _team;

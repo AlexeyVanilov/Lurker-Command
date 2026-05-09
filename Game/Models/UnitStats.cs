@@ -1,4 +1,4 @@
-﻿namespace LurkerCommand.GameSystem {
+﻿namespace LurkerCommand.Models {
     public struct UnitStats {
         public int value;
         public int moves;

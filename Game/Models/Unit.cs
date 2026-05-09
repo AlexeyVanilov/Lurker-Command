@@ -2,13 +2,12 @@
 using GameEngine.Core.InputSystem;
 using GameEngine.Models;
 using GameEngine.Specs;
-using LurkerCommand.MapSystem;
-using LurkerCommand.Services;
+using LurkerCommand.Core;
+using LurkerCommand.Specs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace LurkerCommand.GameSystem
-{
+namespace LurkerCommand.Models {
     public sealed class Unit : Entity, IGrid, IDraggable, IRect, IPoolable
     {
         private UnitStats _stats;

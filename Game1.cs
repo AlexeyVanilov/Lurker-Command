@@ -1,8 +1,8 @@
 ﻿using GameEngine.Core;
 using GameEngine.Core.InputSystem;
 using GameEngine.Core.SceneSystem;
-using LurkerCommand.Scenes;
-using LurkerCommand.Services;
+using LurkerCommand.Models.Scenes;
+using LurkerCommand.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;

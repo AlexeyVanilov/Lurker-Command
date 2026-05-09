@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 using System.Threading.Tasks;
 
-namespace LurkerCommand.Services
-{
-    public static class ConfigManager
-    {
+namespace LurkerCommand.Utils {
+    public static class ConfigManager {
         private static readonly string ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "config.txt");
         private static readonly Dictionary<string, string> Settings = new(32);
 

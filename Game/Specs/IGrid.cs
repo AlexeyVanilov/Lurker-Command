@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace LurkerCommand.Services
-{
+namespace LurkerCommand.Specs {
     public interface IGrid {
         Point gridPosition { get; set; }
     }

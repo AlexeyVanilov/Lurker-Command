@@ -1,7 +1,7 @@
-﻿using LurkerCommand.GameSystem;
+﻿using LurkerCommand.Models;
 using Microsoft.Xna.Framework;
 
-namespace LurkerCommand.MapSystem {
+namespace LurkerCommand.Core {
     public static class CellSystem {
         public const float tintFactor = 0.25f;
         public static void Capture(Cell cell, Team team)

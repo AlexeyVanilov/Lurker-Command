@@ -1,8 +1,7 @@
-﻿using LurkerCommand.MapSystem;
+﻿using LurkerCommand.Models;
 using System;
 
-namespace LurkerCommand.GameSystem.AI
-{
+namespace LurkerCommand.Core {
     public sealed class CellFinder
     {
         private readonly Random _rand = new Random();
